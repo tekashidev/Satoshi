@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
 import { Box, Heading, Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useFaker } from 'faker-react';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  const history = useHistory();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    login({ email, password });
+  
+  const handleLogin = () => {
+    // Tworzymy fikcyjnego użytkownika przy użyciu faker-react
+    const user = {
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
+
+    // Wywołujemy funkcję login z useAuth, aby ustawić stan autoryzacji użytkownika
+    login(user.email, user.password);
+    // Po pomyślnym zalogowaniu użytkownika, przechodzimy do strony portfela
+    history.push('/portfolio');
   };
+
 
   return (
     <Box width="full" maxWidth="md" mx="auto" p={5}>
       <Heading>Login</Heading>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <Stack spacing={4}>
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
